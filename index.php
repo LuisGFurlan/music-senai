@@ -32,7 +32,7 @@
         <nav style="display:flex;  gap:20px;">
             <div style="
                 padding:10px 20px; 
-                border:3px solid #5a0ea1; 
+                border:4px solid #9728feff; 
                 border-radius:15px; 
                 display:flex; 
                 align-items:center; 
@@ -40,7 +40,7 @@
             ">Início</div>
             <div style="
                 padding:10px 20px; 
-                border:3px solid #5a0ea1; 
+                border:4px solid #9728feff; 
                 border-radius:15px; 
                 display:flex; 
                 align-items:center; 
@@ -48,7 +48,7 @@
             ">Desafio</div>
             <div style="
                 padding:10px 20px; 
-                border:3px solid #5a0ea1; 
+                border:4px solid #9728feff; 
                 border-radius:15px; 
                 display:flex; 
                 align-items:center; 
@@ -57,15 +57,15 @@
         </nav>
     </header>
 
-    <main style="text-align:center; padding:20px;">
+    <main style="text-align:left; padding:20px;">
         <h2>Olá {nome_usuario}! Seja bem vindo! 😁</h2>
         <h3>Continuar ouvindo?</h3>
         <div style="
             display:flex; 
-            justify-content:center; 
-            align-items:center; 
+            justify-content:left; 
+            align-items:left; 
             gap:50px;">
-            <div style="border:3px solid #5a0ea1; border-radius:15px; padding:10px;">
+            <div style="border:5px solid #9d34ffff; border-radius:15px; padding:10px;">
                 <img src="imagem.jpg" style="width:300px; height:300px; border-radius:5px;">
                 <div>
                     <input type="range" style="width:100%;">
