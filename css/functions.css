@@ -1,0 +1,370 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Main content */
+.main-content {
+    /* Ajuste na margem para compensar a navbar fixa */
+    padding-top: 120px; 
+}
+
+/* Question section */
+.question-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+    gap: 30px;
+}
+
+.question-bubbles {
+    display: flex;
+    position: relative;
+    margin-left: 30px; /* Adicionado para mover as bolhas para a direita */
+}
+
+.bubble {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-left: -20px;
+    position: relative;
+}
+
+.bubble:nth-child(1) {
+    background-color: #8B5CF6;
+    z-index: 3;
+}
+
+.bubble:nth-child(2) {
+    background-color: #A78BFA;
+    z-index: 2;
+}
+
+.bubble:nth-child(3) {
+    background-color: #C4B5FD;
+    z-index: 1;
+}
+
+.question-text {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Quiz container */
+.quiz-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+
+/* Lyrics box */
+.lyrics-box {
+    background-color: transparent; /* Fundo transparente */
+    border: 2px solid #6B46C1;   /* Borda roxa mais sutil */
+    border-radius: 12px;         /* Bordas arredondadas */
+    padding: 20px;               /* Preenchimento interno reduzido */
+    /* min-height e box-shadow removidos para um visual mais limpo */
+}
+
+.lyrics-text {
+    color: #ffffff; /* Texto branco */
+    font-size: 16px;
+    line-height: 1.7;
+    text-align: left;
+    font-weight: 500;
+}
+
+/* Options section - Bottom half like in the image */
+.options-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.option-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 100%; /* Adicionado para corrigir a largura do card */
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.option-image {
+    width: 100%;
+    height: 320px; /* Altura aumentada de 200px para 240px */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.option-card:nth-child(1) .option-image {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23E5E7EB"/><circle cx="100" cy="100" r="40" fill="%23374151"/><text x="100" y="110" text-anchor="middle" fill="white" font-size="20">👨</text></svg>');
+}
+
+.option-card:nth-child(2) .option-image {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23F3F4F6"/><circle cx="100" cy="100" r="40" fill="%236B7280"/><text x="100" y="110" text-anchor="middle" fill="white" font-size="20">🎤</text></svg>');
+}
+
+.option-card:nth-child(3) .option-image {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23F9FAFB"/><circle cx="100" cy="100" r="40" fill="%231F2937"/><text x="100" y="110" text-anchor="middle" fill="white" font-size="20">👤</text></svg>');
+}
+
+.option-card:nth-child(4) .option-image {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23F3E8FF"/><circle cx="100" cy="100" r="40" fill="%238B5CF6"/><text x="100" y="110" text-anchor="middle" fill="white" font-size="20">👓</text></svg>');
+}
+
+.option-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.option-card:has(input:checked) {
+    border: 3px solid #6B46C1;
+    transform: scale(1.05);
+}
+
+.option-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Espaço entre a imagem e o nome */
+}
+
+.artist-name {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Question form - Hidden for this layout */
+.question-form {
+    display: none;
+}
+
+/* Submit button */
+.submit-btn {
+    background-color: #6B46C1;
+    color: #ffffff;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 40px auto;
+    display: block;
+    box-shadow: 0 4px 15px rgba(107, 70, 193, 0.4);
+}
+
+.submit-btn:hover {
+    background-color: #5B21B6;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(107, 70, 193, 0.6);
+}
+
+/* Results section */
+.results {
+    text-align: center;
+    padding: 40px;
+    background-color: rgba(107, 70, 193, 0.1);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.results h2 {
+    color: #ffffff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.results a {
+    color: #6B46C1;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: 2px solid #6B46C1;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.results a:hover {
+    background-color: #6B46C1;
+    color: #ffffff;
+}
+
+/* Timer icon (decorativo) */
+.timer-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(107, 70, 193, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(107, 70, 193, 0.5);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Layout adjustments to match image */
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 100px);
+}
+
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.question-area {
+    flex: 1;
+    max-width: 60%;
+}
+
+.lyrics-area {
+    flex: 1;
+    max-width: 40%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .top-section {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .question-area, .lyrics-area {
+        max-width: 100%;
+    }
+    
+    .options-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .question-text {
+        font-size: 28px;
+    }
+    
+    .nav-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .main-content {
+        margin-top: 120px;
+        padding: 30px 20px;
+    }
+    
+    .timer-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .options-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .question-text {
+        font-size: 24px;
+    }
+    
+    .bubble {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* --- ESTILOS PARA A NOVA LISTA DE PERGUNTAS COM IMAGENS --- */
+
+.quiz-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.question-block {
+    border: 2px solid #6B46C1;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 40px;
+    background-color: rgba(107, 70, 193, 0.05);
+}
+
+.question-list-title {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.options-section-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* O estilo para .option-container, .option-card, etc., já existe e será aproveitado. */
