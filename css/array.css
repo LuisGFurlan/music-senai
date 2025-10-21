@@ -1,0 +1,228 @@
+:root{--bg:#0b0b0b;--card:#0f1720;--muted:#bfc7d1;--accent:#9728feff;--rounded:12px;--gap:18px;--maxw:1100px;}
+*{box-sizing:border-box;}
+
+/* Fundo global */
+body{
+	margin:0;
+	font-family:"Inter",system-ui,Arial,sans-serif;
+	color:#e6eef6;
+	padding:0;
+	min-height:100vh;
+	background: linear-gradient(135deg, #0b0b0b 0%, #1a0b28 50%, #0b0b0b 100%);
+}
+
+/* Container principal */
+.main-content {
+	display:flex;
+	align-items:flex-start;
+	justify-content:center;
+	padding:40px 16px;
+	min-height:calc(100vh - 100px);
+}
+
+/* Grid principal */
+.wrap{
+	width:100%;
+	max-width:var(--maxw);
+	display:grid;
+	grid-template-columns:360px 1fr 1fr;
+	gap:calc(var(--gap)*2);
+	align-items:start;
+}
+
+/* Container lateral */
+.left{
+	background:var(--card);
+	padding:18px;
+	border-radius:var(--rounded);
+	box-shadow:0 8px 30px rgba(0,0,0,0.6);
+	min-height:480px;
+}
+
+/* Área central */
+.center{
+	background:var(--card);
+	padding:20px;
+	border-radius:var(--rounded);
+	box-shadow:0 8px 30px rgba(0,0,0,0.6);
+	min-height:480px;
+}
+
+/* Conteúdo principal */
+.right{
+	background:var(--card);
+	padding:20px;
+	border-radius:var(--rounded);
+	box-shadow:0 8px 30px rgba(0,0,0,0.6);
+	min-height:480px;
+}
+
+/* Título de seção */
+h2.small{
+	margin:0 0 12px 0;
+	font-size:18px;
+	color:var(--accent);
+}
+
+/* Caixa de playlist */
+.playlist-box{
+	background:rgba(255,255,255,0.02);
+	padding:12px;
+	border-radius:10px;
+	margin-bottom:12px;
+	cursor:pointer;
+}
+
+/* Playlist clicável */
+.playlist-box.clickeavel{
+	cursor:pointer;
+}
+
+.playlist-box.clickeavel:hover{
+	background:rgba(255,255,255,0.05);
+	border:1px solid var(--accent);
+}
+
+/* Playlist ativa */
+.playlist-box.selected{
+	border:1px solid var(--accent);
+}
+
+/* Playlist bloqueada */
+.playlist-box.no-interact{
+	cursor:default;
+}
+
+/* Música individual */
+.song{
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	padding:6px 8px;
+	border-radius:8px;
+	margin-bottom:6px;
+}
+
+/* Nome da música */
+.song .name{
+	color:var(--muted);
+	font-size:14px;
+}
+
+/* Botões menores */
+.small-btn{
+	background:transparent;
+	border:1px solid rgba(255,255,255,0.08);
+	color:var(--muted);
+	padding:6px 10px;
+	border-radius:8px;
+	cursor:pointer;
+	font-size:13px;
+}
+
+/* Linha de formulário */
+form.row{
+	display:flex;
+	gap:12px;
+	align-items:center;
+	margin-bottom:18px;
+}
+
+/* Input de texto */
+input[type="text"]{
+	flex:1;
+	padding:10px 12px;
+	border-radius:10px;
+	border:1px solid rgba(255,255,255,0.06);
+	background:rgba(0,0,0,0.25);
+	color:#fff;
+	font-size:15px;
+}
+
+/* Botão principal */
+button.primary{
+	padding:10px 14px;
+	border-radius:10px;
+	border:none;
+	cursor:pointer;
+	font-weight:700;
+	color:#fff;
+	background:linear-gradient(90deg,#5e00ff,#9728fe,#7f00ff,#9728fe);
+	box-shadow:0 4px 15px rgba(151,40,254,0.4);
+}
+
+button.primary:hover{
+	transform:scale(1.08);
+	box-shadow:0 8px 25px rgba(151,40,254,0.7);
+}
+
+/* Mensagens de status */
+.msg{
+	padding:10px 12px;
+	border-radius:8px;
+	margin-bottom:12px;
+}
+
+/* Mensagem de erro */
+.msg.error{
+	background:rgba(255,0,0,0.06);
+	color:#ffb4b4;
+	border:1px solid rgba(255,0,0,0.08);
+}
+
+/* Mensagem de sucesso */
+.msg.success{
+	background:rgba(16,185,129,0.08);
+	color:#8ef0c9;
+	border:1px solid rgba(16,185,129,0.08);
+}
+
+/* Grid de playlists */
+.playlists-grid{
+	display:grid;
+	grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+	gap:12px;
+}
+
+/* Card individual */
+.pl-card{
+	background:rgba(255,255,255,0.02);
+	padding:12px;
+	border-radius:10px;
+	min-height:80px;
+}
+
+/* Lista de músicas dentro do card */
+.songs-list{
+	margin-top:8px;
+	font-size:14px;
+	color:var(--muted);
+}
+
+/* Região de adicionar música */
+.add-row{
+	margin-top:10px;
+	display:flex;
+	flex-direction:column;
+	gap:6px;
+}
+
+.add-row select{
+	width:100%;
+}
+
+.add-row button{
+	width:48%;
+	margin-right:4%;
+	margin-top:4px;
+}
+
+.add-row button:last-child{
+	margin-right:0;
+}
+
+/* Botão de delete */
+.delete-btn{
+	margin-top:10px;
+	width:100%;
+}
