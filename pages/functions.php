@@ -1,11 +1,14 @@
 <?php
+// Uma função que carrega as perguntas do arquivo quiz_data.php
 function carregarPerguntas() {
     require_once 'quiz_data.php';
     return $perguntas;
 }
 
+// passa o array inteiro, contendo todas as perguntas, à variável $perguntas.
 $perguntas = carregarPerguntas();
 
+//Função que corrige as perguntas e contabiliza os acertos.
 function corrigirQuiz($perguntas, $respostas) {
     $acertos = 0;
     for ($i = 0; $i < count($perguntas); $i++) {
@@ -20,6 +23,7 @@ function corrigirQuiz($perguntas, $respostas) {
     return $acertos;
 }
 
+//Função que exibe os resultados ao fim do quiz.
 $mostrar_resultados = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acertos = corrigirQuiz($perguntas, $_POST);
