@@ -1,40 +1,30 @@
 <?php
-function criarQuiz() {
-    // Cada pergunta é um array com: [enunciado, alternativas, índice da correta]
-    return [
-        ["Quem canta a música 'Mina do condomínio'? :", ["Ana Castela", "Seu Jorge", "Anitta"], 1],
-        ["Quem canta a música 'Balada'? :", ["Gustavo Lima", "Veigh", "Oruam"], 0],
-        ["Quem canta a música 'Infiel'? :", ["Lucas Lucco", "Michel Teló", "Marília Mendonça"], 2],
-        ["Quem canta a música 'Cheri Cheri Lady'? :", ["MC Poze", "Pablo Vittar", "Modern Talking"], 2],
-        ["Quem canta a música 'Hey Brother'? :", ["Marshmello", "Alok", "Avicii"], 2],
-    ];
+function carregarPerguntas() {
+    require_once 'quiz_data.php';
+    return $perguntas;
 }
 
-//Função que corrige o quiz
+$perguntas = carregarPerguntas();
+
 function corrigirQuiz($perguntas, $respostas) {
     $acertos = 0;
-
     for ($i = 0; $i < count($perguntas); $i++) {
-        $indiceCorreto = $perguntas[$i][2];   // índice da resposta correta
-        $respostaUsuario = $respostas["p$i"]; // resposta marcada 
-
-        if ($respostaUsuario == $indiceCorreto) {
-            $acertos++;
+        if (isset($respostas["p$i"])) {
+            $indiceCorreto = $perguntas[$i][2];
+            $respostaUsuario = $respostas["p$i"];
+            if ($respostaUsuario == $indiceCorreto) {
+                $acertos++;
+            }
         }
     }
-
     return $acertos;
 }
 
-//Execução principal
-$perguntas = criarQuiz();
-
+$mostrar_resultados = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acertos = corrigirQuiz($perguntas, $_POST);
     $total = count($perguntas);
-    echo "<h2>Você acertou $acertos de $total perguntas!</h2>";
-    echo '<a href="functions.php">Tentar novamente</a>';
-    exit;
+    $mostrar_resultados = true;
 }
 ?>
 
@@ -43,28 +33,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Music</title>
+    <link rel="stylesheet" href="../css/functions.css">
 </head>
 <body>
-    <h1>De quem são as seguintes musicas?</h1>
+    <?php include '../includes/navbar.php'; ?>
 
-    <form method="post">
-        <?php
-        for ($i = 0; $i < count($perguntas); $i++) {
-            echo "<fieldset>";
-            echo "<legend>" . $perguntas[$i][0] . "</legend>";
-
-            //Percorre as alternativas
-            for ($j = 0; $j < count($perguntas[$i][1]); $j++) {
-                echo "<label>";
-                echo "<input type='radio' name='p$i' value='$j' required> ";
-                echo $perguntas[$i][1][$j];
-                echo "</label><br>";
-            }
-
-            echo "</fieldset><br>";
-        }
-        ?>
-        <button type="submit">Enviar Respostas</button>
-    </form>
+    <main class="main-content">
+        <?php if ($mostrar_resultados) : ?>
+            <div class="results">
+                <h2>Você acertou <?php echo $acertos; ?> de <?php echo $total; ?> perguntas!</h2>
+                <a href="functions.php">Tentar novamente</a>
+            </div>
+        <?php else : ?>
+            <h1 class="quiz-title">De quem são as seguintes músicas?</h1>
+            <form method="post">
+                <?php
+                foreach ($perguntas as $i => $pergunta) :
+                ?>
+                    <div class="question-block">
+                        <h2 class="question-list-title"><?php echo htmlspecialchars($pergunta[0]); ?></h2>
+                        <div class="options-section-list">
+                            <?php 
+                            foreach ($pergunta[1] as $j => $alternativa) : 
+                                $artist_name = $alternativa[0];
+                                $image_file = $alternativa[1];
+                            ?>
+                                <div class="option-container">
+                                    <label class="option-card">
+                                        <input type="radio" name="p<?php echo $i; ?>" value="<?php echo $j; ?>" required>
+                                        <div class="option-image" style="background-image: url(../imagens/<?php echo htmlspecialchars($image_file); ?>)"></div>
+                                    </label>
+                                    <div class="artist-name"><?php echo htmlspecialchars($artist_name); ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                <button type="submit" class="submit-btn">Enviar Respostas</button>
+            </form>
+        <?php endif; ?>
+    </main>
 </body>
 </html>
