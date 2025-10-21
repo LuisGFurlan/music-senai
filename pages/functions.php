@@ -23,7 +23,7 @@ function corrigirQuiz($perguntas, $respostas) {
     return $acertos;
 }
 
-//Função que exibe os resultados ao fim do quiz.
+//Exibe os resultados ao fim do quiz.
 $mostrar_resultados = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acertos = corrigirQuiz($perguntas, $_POST);
