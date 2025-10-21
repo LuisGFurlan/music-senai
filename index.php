@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music - Senai</title>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
-
+    <?php include 'includes/navbar.php'; ?>
     <main>
         <div class="welcome-section">
             <h2 class="welcome-title">Olá {nome_usuario}! Seja bem vindo! 😁</h2>
