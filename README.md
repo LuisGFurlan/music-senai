@@ -1,4 +1,4 @@
-# README - Overview do Fluxo do App de Playlists
+# Overview do Fluxo do App de Playlists
 
 Este documento apresenta uma visão geral do fluxo de dados e interações no aplicativo de playlists, que utiliza PHP, HTML, CSS e JavaScript, com armazenamento temporário em sessão.
 
