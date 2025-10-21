@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Music</title>
     <link rel="stylesheet" href="../css/functions.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
