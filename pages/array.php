@@ -75,11 +75,6 @@ function playlistExiste($nome, $playlists) {
 	return in_array(mb_strtolower($nome), $nomesMinusculos); // Verifica se o nome já existe
 }
 
-// Função que usa array_map() e in_array() - verifica se música já existe
-function musicaExisteNaPlaylist($musica, $musicasPlaylist) {
-	$musicasMinusculas = array_map('mb_strtolower', $musicasPlaylist); // Converte todas as músicas para minúsculas
-	return in_array(mb_strtolower($musica), $musicasMinusculas); // Verifica se a música já está na lista
-}
 
 // === PROCESSAMENTO DE FORMULÁRIOS (USANDO ARRAYS) ===
 // Quando o usuário clica em um botão, esta parte é executada
@@ -108,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	}
 
-	// === ADICIONAR MÚSICA À PLAYLIST (USA ARRAY_SEARCH) ===
+	// === ADICIONAR MÚSICA À PLAYLIST (USA IN_ARRAY) ===
 	if ($acao === 'adicionar_musica') {
 		$indiceDestino = (int)($_POST['indice_destino'] ?? -1); // Qual playlist (0, 1, 2, etc.)
 		$musica = limpar($_POST['musica'] ?? ''); // Qual música foi selecionada
@@ -119,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$_SESSION['mensagens_flash']['erros'][] = 'Não é permitido adicionar músicas em Curtidas.';
 		} elseif ($musica === '') {
 			$_SESSION['mensagens_flash']['erros'][] = 'Nenhuma música selecionada.';
-		} elseif (musicaExisteNaPlaylist($musica, $_SESSION['playlists'][$indiceDestino]['musicas'] ?? [])) {
+		} elseif (in_array($musica, $_SESSION['playlists'][$indiceDestino]['musicas'] ?? [])) {
 			$_SESSION['mensagens_flash']['erros'][] = "A música '$musica' já está nessa playlist";
 		} else {
 			// Adiciona música ao array de músicas da playlist (usando [])
@@ -185,32 +180,6 @@ $erros = $_SESSION['mensagens_flash']['erros']; // Array de erros
 $sucesso = $_SESSION['mensagens_flash']['sucesso']; // String de sucesso
 $_SESSION['mensagens_flash'] = ['erros'=>[], 'sucesso'=>'']; // Limpa os arrays
 
-// === FUNÇÕES QUE USAM ARRAYS PARA EXIBIR DADOS ===
-
-// Função que usa array_map() para criar HTML das músicas
-function exibirMusicas($musicas) {
-	if (empty($musicas)) {
-		echo '<div style="opacity:0.7">Sem músicas ainda.</div>';
-	} else {
-		// array_map() aplica uma função a cada música do array
-		$elementosMusicas = array_map(function($musica) {
-			return '<div style="margin-bottom:6px">' . htmlspecialchars($musica, ENT_QUOTES, 'UTF-8') . '</div>';
-		}, $musicas);
-		// implode() junta todos os elementos em uma string
-		echo implode('', $elementosMusicas);
-	}
-}
-
-// Função que usa array_map() para criar opções do select
-function criarOpcoesMusicas($musicas) {
-	// array_map() cria uma tag <option> para cada música
-	$opcoes = array_map(function($musica) {
-		$musicaEscapada = htmlspecialchars($musica, ENT_QUOTES, 'UTF-8');
-		return "<option value=\"$musicaEscapada\">$musicaEscapada</option>";
-	}, $musicas);
-	// implode() junta todas as opções em uma string
-	return implode('', $opcoes);
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -230,16 +199,15 @@ function criarOpcoesMusicas($musicas) {
                 <h2 class="small">Músicas Curtidas</h2>
                 <div class="playlist-box no-interact" id="musicasCurtidas">
                     <?php 
-                    // Usar array_map para exibir músicas curtidas
+                    // Exibir músicas curtidas diretamente
                     $musicasCurtidas = $_SESSION['playlists'][0]['musicas'] ?? [];
                     if (!empty($musicasCurtidas)) {
-                        $elementosMusicas = array_map(function($musica) {
-                            return '<div class="song">
+                        foreach ($musicasCurtidas as $musica) {
+                            echo '<div class="song">
                                         <div class="name">' . htmlspecialchars($musica, ENT_QUOTES, 'UTF-8') . '</div>
                                         <div style="font-size:12px;color:var(--muted)">origem</div>
                                     </div>';
-                        }, $musicasCurtidas);
-                        echo implode('', $elementosMusicas);
+                        }
                     } else {
                         echo '<div style="opacity:0.7">Nenhuma música curtida ainda.</div>';
                     }
@@ -249,7 +217,7 @@ function criarOpcoesMusicas($musicas) {
                 <h2 class="small">Playlists</h2>
                 <div id="menuPlaylists">
                     <?php 
-                    // Usar for loop simples ao invés de foreach
+                    // Exibir playlists criadas
                     $totalPlaylists = count($_SESSION['playlists']);
                     for($i = 1; $i < $totalPlaylists; $i++) {
                         $playlist = $_SESSION['playlists'][$i];
@@ -302,16 +270,24 @@ function criarOpcoesMusicas($musicas) {
 
                 <div class="playlists-grid">
                     <?php 
-                    // Usar for loop simples para exibir todas as playlists
+                    // Exibir todas as playlists com controles
                     $totalPlaylists = count($_SESSION['playlists']);
+                    $musicasCurtidas = $_SESSION['playlists'][0]['musicas'] ?? []; // Declarar uma vez para usar em todo o loop
                     for($i = 0; $i < $totalPlaylists; $i++) {
                         $playlist = $_SESSION['playlists'][$i];
                         echo '<div class="pl-card">
                                 <div style="font-weight:700;">' . htmlspecialchars($playlist['nome'], ENT_QUOTES, 'UTF-8') . '</div>
                                 <div class="songs-list">';
                         
-                        // Usar função para exibir músicas
-                        exibirMusicas($playlist['musicas'] ?? []);
+                        // Exibir músicas diretamente
+                        $musicas = $playlist['musicas'] ?? [];
+                        if (empty($musicas)) {
+                            echo '<div style="opacity:0.7">Sem músicas ainda.</div>';
+                        } else {
+                            foreach ($musicas as $musica) {
+                                echo '<div style="margin-bottom:6px">' . htmlspecialchars($musica, ENT_QUOTES, 'UTF-8') . '</div>';
+                            }
+                        }
                         
                         echo '</div>';
 
@@ -319,8 +295,12 @@ function criarOpcoesMusicas($musicas) {
                             echo '<form method="POST" class="add-row">
                                     <input type="hidden" name="indice_destino" value="' . $i . '"/>
                                     <select name="musica" required>
-                                        <option value="">Selecionar música...</option>
-                                        ' . criarOpcoesMusicas($_SESSION['playlists'][0]['musicas'] ?? []) . '
+                                        <option value="">Selecionar música...</option>';
+                                        foreach ($musicasCurtidas as $musica) {
+                                            $musicaEscapada = htmlspecialchars($musica, ENT_QUOTES, 'UTF-8');
+                                            echo "<option value=\"$musicaEscapada\">$musicaEscapada</option>";
+                                        }
+                                        echo '
                                     </select>
                                     <div style="display:flex;gap:6px;margin-top:6px;">
                                         <button class="small-btn" name="acao" value="adicionar_musica" type="submit">Adicionar</button>
@@ -343,7 +323,7 @@ function criarOpcoesMusicas($musicas) {
 // Dados das playlists em JavaScript (copiados do PHP)
 const dadosPlaylists = <?php echo json_encode($_SESSION['playlists']); ?>;
 
-// Função para mostrar músicas de uma playlist (estilo iniciante)
+// Função para mostrar músicas de uma playlist
 function mostrarMusicas(indicePlaylist) {
 	// Pegar os dados da playlist
 	const playlist = dadosPlaylists[indicePlaylist];
@@ -356,11 +336,11 @@ function mostrarMusicas(indicePlaylist) {
 	// Preparar HTML das músicas
 	let htmlMusicas = '';
 	
-	// Verificar se tem músicas (estilo iniciante)
+	// Verificar se tem músicas
 	if (musicasPlaylist.length === 0) {
 		htmlMusicas = '<div style="opacity:0.7">Esta playlist está vazia.</div>';
 	} else {
-		// Criar HTML para cada música (usando for simples)
+		// Criar HTML para cada música
 		for (let i = 0; i < musicasPlaylist.length; i++) {
 			const musica = musicasPlaylist[i];
 			htmlMusicas += '<div class="song">';
@@ -380,7 +360,7 @@ function mostrarMusicas(indicePlaylist) {
 	document.getElementById('right').style.display = 'none';
 }
 
-// Função para fechar a visualização de músicas (estilo iniciante)
+// Função para fechar a visualização de músicas
 function fecharMusicas() {
 	// Esconder área de músicas
 	document.getElementById('areaMusicas').style.display = 'none';
