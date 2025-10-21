@@ -4,83 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music - Senai</title>
+    <link rel="stylesheet" href="css/index.css">
 </head>
-<body style="
-    margin:0; 
-    background:#000; 
-    color:#fff; 
-    font-family:Arial;">
-    <header style="
-        display:flex; 
-        justify-content:space-between; 
-        align-items:center; 
-        padding:10px; 
-        border-bottom:3px solid #5a0ea1; 
-        background:#000;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div style="
-                width:80px; 
-                height:80px; 
-                border:3px solid #5a0ea1; 
-                border-radius:50%; 
-                display:flex; 
-                justify-content:center; 
-                align-items:center; 
-                font-size:48px;
-            ">MS</div>
-        </div>
-        <nav style="display:flex;  gap:20px;">
-            <div style="
-                padding:10px 20px; 
-                border:4px solid #9728feff; 
-                border-radius:15px; 
-                display:flex; 
-                align-items:center; 
-                gap:5px;
-            ">Início</div>
-            <div style="
-                padding:10px 20px; 
-                border:4px solid #9728feff; 
-                border-radius:15px; 
-                display:flex; 
-                align-items:center; 
-                gap:5px;
-            ">Desafio</div>
-            <div style="
-                padding:10px 20px; 
-                border:4px solid #9728feff; 
-                border-radius:15px; 
-                display:flex; 
-                align-items:center; 
-                gap:5px;
-            ">Criar</div>
-        </nav>
-    </header>
+<body>
 
-    <main style="text-align:left; padding:20px;">
-        <h2>Olá {nome_usuario}! Seja bem vindo! 😁</h2>
-        <h3>Continuar ouvindo?</h3>
-        <div style="
-            display:flex; 
-            justify-content:left; 
-            align-items:left; 
-            gap:50px;">
-            <div style="border:5px solid #9d34ffff; border-radius:15px; padding:10px;">
-                <img src="imagem.jpg" style="width:300px; height:300px; border-radius:5px;">
-                <div>
-                    <input type="range" style="width:100%;">
-                    <div style="
-                        display:flex; 
-                        justify-content:space-around; 
-                        padding:10px; 
-                        font-size:24px;
-                    "></div>
+    <main>
+        <div class="welcome-section">
+            <h2 class="welcome-title">Olá {nome_usuario}! Seja bem vindo! 😁</h2>
+            <h3 class="welcome-subtitle">Continuar ouvindo?</h3>
+        </div>
+        <div class="main-container">
+            <div class="music-player">
+                <!-- Album Art -->
+                <div class="album-art-container">
+                    <img src="imagens/imagem.png" class="album-art" alt="Album Art">
+                </div>
+                
+                <!-- Song Info -->
+                <div class="song-info">
+                    <h3 class="song-title">Nome da Música</h3>
+                    <p class="song-artist">Artista</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill">
+                            <div class="progress-handle"></div>
+                        </div>
+                    </div>
+                    <div class="time-display">
+                        <span>1:23</span>
+                        <span>3:45</span>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="controls">
+                    <!-- Shuffle -->
+                    <button class="control-btn shuffle-btn">🔀</button>
+                    
+                    <!-- Previous -->
+                    <button class="control-btn prev-btn">⏮</button>
+                    
+                    <!-- Play/Pause -->
+                    <button class="control-btn play-btn">▶</button>
+                    
+                    <!-- Next -->
+                    <button class="control-btn next-btn">⏭</button>
+                    
+                    <!-- Repeat -->
+                    <button class="control-btn repeat-btn">🔁</button>
+                </div>
+                
+                <!-- Volume -->
+                <div class="volume-container">
+                    <span class="volume-icon">🔊</span>
+                    <div class="volume-bar">
+                        <div class="volume-fill"></div>
+                    </div>
+                    <span class="volume-percentage">70%</span>
                 </div>
             </div>
-            <div style="width:600px; height:300px;"><!-- placeholder for waves --></div>
+            <div class="background-image-container">
+                <img src="imagens/background.jpg" class="background-image" alt="Background">
+            </div>
         </div>
     </main>
 
-    <footer style="border-top:3px solid #5a0ea1; text-align:center; padding:10px;">Footer</footer>
 </body>
 </html>
