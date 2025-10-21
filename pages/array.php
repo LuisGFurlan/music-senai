@@ -1,95 +1,117 @@
 <?php
+// Inicia a sessão do usuário (como uma "memória" temporária)
 session_start();
 
 /*
-	- Sistema de Playlists usando Arrays e Funções de Array
-	- Funcionalidades:
-	1) Playlist "Músicas Curtidas" (fixa)
+	=== SISTEMA DE PLAYLISTS USANDO ARRAYS ===
+	
+	O que são Arrays?
+	- Arrays são como "listas" ou "caixas" que guardam várias informações
+	- Exemplo: ['maçã', 'banana', 'laranja'] é um array de frutas
+	- Cada item tem uma posição: 0, 1, 2, etc.
+	
+	Funcionalidades desta página:
+	1) Playlist "Músicas Curtidas" (sempre existe)
 	2) Criar novas playlists
-	3) Adicionar músicas das Curtidas
+	3) Adicionar músicas das Curtidas para outras playlists
 	4) Remover músicas de qualquer playlist
 	5) Limpar todas as playlists criadas
 	6) Remover playlists selecionadas
-	7) Mensagens desaparecem ao recarregar
+	7) Mensagens aparecem e desaparecem automaticamente
 */
 
-// Inicialização das playlists
+// === CRIANDO O ARRAY PRINCIPAL DE PLAYLISTS ===
+// Verifica se é a primeira vez que o usuário acessa a página
 if (!isset($_SESSION['playlists_initialized'])) {
+	// Cria o array principal com 3 playlists
 	$_SESSION['playlists'] = [
+		// Playlist 0: Músicas Curtidas (sempre tem músicas)
 		['nome'=>'Músicas Curtidas','musicas'=>['Neon Sky','Digital Horizon','Echoes of Tomorrow','Midnight Pulse','Industrial Dreams']],
+		// Playlist 1: Playlist 1 (começa vazia)
 		['nome'=>'Playlist 1','musicas'=>[]],
+		// Playlist 2: Playlist 2 (começa vazia)
 		['nome'=>'Playlist 2','musicas'=>[]]
 	];
+	// Marca que já foi inicializado
 	$_SESSION['playlists_initialized'] = true;
 }
 
-// Migração de compatibilidade: converter estrutura antiga para nova
+// === CONVERSÃO DE ARRAYS ANTIGOS PARA NOVOS ===
+// Se o usuário já tinha dados salvos com nomes antigos, converte para os novos
 if (isset($_SESSION['playlists']) && !empty($_SESSION['playlists'])) {
-	$primeiraPlaylist = $_SESSION['playlists'][0];
+	$primeiraPlaylist = $_SESSION['playlists'][0]; // Pega a primeira playlist
 	if (isset($primeiraPlaylist['songs']) && !isset($primeiraPlaylist['musicas'])) {
-		// Converter estrutura antiga para nova
+		// Se tem 'songs' mas não tem 'musicas', precisa converter
 		foreach ($_SESSION['playlists'] as $i => $playlist) {
 			if (isset($playlist['songs'])) {
-				$_SESSION['playlists'][$i]['musicas'] = $playlist['songs'];
-				unset($_SESSION['playlists'][$i]['songs']);
+				$_SESSION['playlists'][$i]['musicas'] = $playlist['songs']; // Copia 'songs' para 'musicas'
+				unset($_SESSION['playlists'][$i]['songs']); // Remove o antigo 'songs'
 			}
 			if (isset($playlist['name'])) {
-				$_SESSION['playlists'][$i]['nome'] = $playlist['name'];
-				unset($_SESSION['playlists'][$i]['name']);
+				$_SESSION['playlists'][$i]['nome'] = $playlist['name']; // Copia 'name' para 'nome'
+				unset($_SESSION['playlists'][$i]['name']); // Remove o antigo 'name'
 			}
 		}
 	}
 }
 
-// Inicialização das mensagens
+// === CRIANDO ARRAY PARA MENSAGENS ===
+// Array para guardar mensagens de erro e sucesso
 if (!isset($_SESSION['mensagens_flash'])) {
-	$_SESSION['mensagens_flash'] = ['erros'=>[], 'sucesso'=>''];
+	$_SESSION['mensagens_flash'] = ['erros'=>[], 'sucesso'=>'']; // Array com 2 partes: erros e sucesso
 }
 
-// Função para limpar dados de entrada
+// === FUNÇÕES QUE USAM ARRAYS ===
+
+// Função para limpar texto (remove espaços e caracteres especiais)
 function limpar($texto){ 
 	return trim(htmlspecialchars((string)$texto, ENT_QUOTES, 'UTF-8')); 
 }
 
-// Função para verificar se playlist já existe
+// Função que usa array_column() - pega todos os nomes das playlists
 function playlistExiste($nome, $playlists) {
-	$nomes = array_column($playlists, 'nome');
-	$nomesMinusculos = array_map('mb_strtolower', $nomes);
-	return in_array(mb_strtolower($nome), $nomesMinusculos);
+	$nomes = array_column($playlists, 'nome'); // Extrai só os nomes: ['Playlist 1', 'Playlist 2', ...]
+	$nomesMinusculos = array_map('mb_strtolower', $nomes); // Converte para minúsculas: ['playlist 1', 'playlist 2', ...]
+	return in_array(mb_strtolower($nome), $nomesMinusculos); // Verifica se o nome já existe
 }
 
-// Função para verificar se música já existe na playlist
+// Função que usa array_map() e in_array() - verifica se música já existe
 function musicaExisteNaPlaylist($musica, $musicasPlaylist) {
-	$musicasMinusculas = array_map('mb_strtolower', $musicasPlaylist);
-	return in_array(mb_strtolower($musica), $musicasMinusculas);
+	$musicasMinusculas = array_map('mb_strtolower', $musicasPlaylist); // Converte todas as músicas para minúsculas
+	return in_array(mb_strtolower($musica), $musicasMinusculas); // Verifica se a música já está na lista
 }
 
-// --- Processamento de Formulários ---
+// === PROCESSAMENTO DE FORMULÁRIOS (USANDO ARRAYS) ===
+// Quando o usuário clica em um botão, esta parte é executada
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-	$acao = $_POST['acao'] ?? '';
+	$acao = $_POST['acao'] ?? ''; // Pega qual botão foi clicado
 
-	// Criar nova playlist
+	// === CRIAR NOVA PLAYLIST (ADICIONA AO ARRAY) ===
 	if ($acao === 'criar_playlist') {
-		$nome = limpar($_POST['nome_playlist'] ?? '');
+		$nome = limpar($_POST['nome_playlist'] ?? ''); // Pega o nome digitado
 
 		if ($nome === '') {
+			// Adiciona erro ao array de erros (usando [])
 			$_SESSION['mensagens_flash']['erros'][] = 'O nome da playlist não pode ser vazio.';
 		} elseif (playlistExiste($nome, $_SESSION['playlists'])) {
+			// Adiciona erro ao array de erros (usando [])
 			$_SESSION['mensagens_flash']['erros'][] = 'Já existe uma playlist com esse nome.';
 		} else {
+			// Adiciona nova playlist ao array principal (usando [])
 			$_SESSION['playlists'][] = [
 				'nome'  => $nome,
-				'musicas' => []
+				'musicas' => [] // Array vazio de músicas
 			];
+			// Adiciona mensagem de sucesso
 			$_SESSION['mensagens_flash']['sucesso'] = "Playlist '$nome' criada com sucesso.";
 		}
 	}
 
-	// Adicionar música à playlist
+	// === ADICIONAR MÚSICA À PLAYLIST (USA ARRAY_SEARCH) ===
 	if ($acao === 'adicionar_musica') {
-		$indiceDestino = (int)($_POST['indice_destino'] ?? -1);
-		$musica = limpar($_POST['musica'] ?? '');
+		$indiceDestino = (int)($_POST['indice_destino'] ?? -1); // Qual playlist (0, 1, 2, etc.)
+		$musica = limpar($_POST['musica'] ?? ''); // Qual música foi selecionada
 
 		if (!isset($_SESSION['playlists'][$indiceDestino])) {
 			$_SESSION['mensagens_flash']['erros'][] = 'Playlist inválida.';
@@ -100,15 +122,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		} elseif (musicaExisteNaPlaylist($musica, $_SESSION['playlists'][$indiceDestino]['musicas'] ?? [])) {
 			$_SESSION['mensagens_flash']['erros'][] = "A música '$musica' já está nessa playlist";
 		} else {
+			// Adiciona música ao array de músicas da playlist (usando [])
 			$_SESSION['playlists'][$indiceDestino]['musicas'][] = $musica;
 			$_SESSION['mensagens_flash']['sucesso'] = "Música '$musica' adicionada à playlist '{$_SESSION['playlists'][$indiceDestino]['nome']}'.";
 		}
 	}
 
-	// Remover música da playlist
+	// === REMOVER MÚSICA DA PLAYLIST (USA ARRAY_SEARCH E ARRAY_SPLICE) ===
 	if ($acao === 'remover_musica') {
-		$indiceDestino = (int)($_POST['indice_destino'] ?? -1);
-		$musica = limpar($_POST['musica'] ?? '');
+		$indiceDestino = (int)($_POST['indice_destino'] ?? -1); // Qual playlist
+		$musica = limpar($_POST['musica'] ?? ''); // Qual música remover
 
 		if (!isset($_SESSION['playlists'][$indiceDestino])) {
 			$_SESSION['mensagens_flash']['erros'][] = 'Playlist inválida.';
@@ -116,9 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$_SESSION['mensagens_flash']['erros'][] = 'Não é permitido remover músicas de Curtidas';
 		} else {
 			$musicasPlaylist = $_SESSION['playlists'][$indiceDestino]['musicas'] ?? [];
+			// array_search() encontra a posição da música no array
 			$indiceMusica = array_search($musica, $musicasPlaylist);
 			
 			if ($indiceMusica !== false) {
+				// array_splice() remove a música da posição encontrada
 				array_splice($_SESSION['playlists'][$indiceDestino]['musicas'], $indiceMusica, 1);
 				$_SESSION['mensagens_flash']['sucesso'] = "Música '$musica' removida de '{$_SESSION['playlists'][$indiceDestino]['nome']}'.";
 			} else {
@@ -127,23 +152,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	}
 
-	// Limpar todas as playlists criadas
+	// === LIMPAR TODAS AS PLAYLISTS (USA COUNT E FOR) ===
 	if ($acao === 'limpar_playlists') {
-		$totalPlaylists = count($_SESSION['playlists']);
-		for ($i = 1; $i < $totalPlaylists; $i++) {
-			$_SESSION['playlists'][$i]['musicas'] = [];
+		$totalPlaylists = count($_SESSION['playlists']); // Conta quantas playlists existem
+		for ($i = 1; $i < $totalPlaylists; $i++) { // Começa do 1 (pula a playlist 0 que é Curtidas)
+			$_SESSION['playlists'][$i]['musicas'] = []; // Esvazia o array de músicas
 		}
 		$_SESSION['mensagens_flash']['sucesso'] = 'Todas as playlists criadas foram limpas.';
 	}
 
-	// Deletar playlist específica
+	// === DELETAR PLAYLIST ESPECÍFICA (USA ARRAY_SPLICE) ===
 	if ($acao === 'deletar_playlist') {
-		$indiceDeletar = (int)($_POST['indice_deletar'] ?? -1);
+		$indiceDeletar = (int)($_POST['indice_deletar'] ?? -1); // Qual playlist deletar
 
 		if ($indiceDeletar <= 0 || !isset($_SESSION['playlists'][$indiceDeletar])) {
 			$_SESSION['mensagens_flash']['erros'][] = 'Playlist inválida ou não pode ser removida.';
 		} else {
-			$nomeDeletado = $_SESSION['playlists'][$indiceDeletar]['nome'];
+			$nomeDeletado = $_SESSION['playlists'][$indiceDeletar]['nome']; // Salva o nome antes de deletar
+			// array_splice() remove a playlist inteira do array
 			array_splice($_SESSION['playlists'], $indiceDeletar, 1);
 			$_SESSION['mensagens_flash']['sucesso'] = "Playlist '$nomeDeletado' removida com sucesso.";
 		}
@@ -153,29 +179,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	exit();
 }
 
-// Preparar mensagens para exibição
-$erros = $_SESSION['mensagens_flash']['erros'];
-$sucesso = $_SESSION['mensagens_flash']['sucesso'];
-$_SESSION['mensagens_flash'] = ['erros'=>[], 'sucesso'=>''];
+// === PREPARAR DADOS PARA EXIBIÇÃO ===
+// Pega as mensagens dos arrays e limpa para próxima vez
+$erros = $_SESSION['mensagens_flash']['erros']; // Array de erros
+$sucesso = $_SESSION['mensagens_flash']['sucesso']; // String de sucesso
+$_SESSION['mensagens_flash'] = ['erros'=>[], 'sucesso'=>'']; // Limpa os arrays
 
-// Função para exibir lista de músicas usando array_map
+// === FUNÇÕES QUE USAM ARRAYS PARA EXIBIR DADOS ===
+
+// Função que usa array_map() para criar HTML das músicas
 function exibirMusicas($musicas) {
 	if (empty($musicas)) {
 		echo '<div style="opacity:0.7">Sem músicas ainda.</div>';
 	} else {
+		// array_map() aplica uma função a cada música do array
 		$elementosMusicas = array_map(function($musica) {
 			return '<div style="margin-bottom:6px">' . htmlspecialchars($musica, ENT_QUOTES, 'UTF-8') . '</div>';
 		}, $musicas);
+		// implode() junta todos os elementos em uma string
 		echo implode('', $elementosMusicas);
 	}
 }
 
-// Função para criar opções do select usando array_map
+// Função que usa array_map() para criar opções do select
 function criarOpcoesMusicas($musicas) {
+	// array_map() cria uma tag <option> para cada música
 	$opcoes = array_map(function($musica) {
 		$musicaEscapada = htmlspecialchars($musica, ENT_QUOTES, 'UTF-8');
 		return "<option value=\"$musicaEscapada\">$musicaEscapada</option>";
 	}, $musicas);
+	// implode() junta todas as opções em uma string
 	return implode('', $opcoes);
 }
 ?>
