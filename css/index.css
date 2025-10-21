@@ -1,0 +1,235 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+
+/* Main content */
+main {
+    text-align: left;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.welcome-section {
+    margin-bottom: 40px;
+}
+
+.welcome-title {
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.welcome-subtitle {
+    font-size: 18px;
+    color: #ccc;
+}
+
+.main-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+}
+
+/* Music Player Card */
+.music-player {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+    max-width: 350px;
+}
+
+.album-art-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.album-art {
+    width: 250px;
+    height: 250px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    object-fit: cover;
+}
+
+.song-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.song-title {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.song-artist {
+    margin: 5px 0 0 0;
+    color: #888;
+    font-size: 14px;
+}
+
+/* Progress Bar */
+.progress-container {
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    position: relative;
+}
+
+.progress-fill {
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(90deg, #5a0ea1, #9728feff);
+    border-radius: 2px;
+    position: relative;
+}
+
+.progress-handle {
+    position: absolute;
+    right: -6px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.shuffle-btn, .repeat-btn {
+    color: #666;
+    font-size: 18px;
+}
+
+.shuffle-btn:hover, .repeat-btn:hover {
+    color: #9728feff;
+}
+
+.prev-btn, .next-btn {
+    color: #fff;
+    font-size: 24px;
+}
+
+.prev-btn:hover, .next-btn:hover {
+    transform: scale(1.1);
+}
+
+.play-btn {
+    background: linear-gradient(135deg, #5a0ea1, #9728feff);
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(90,14,161,0.4);
+    transition: transform 0.2s ease;
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Volume Control */
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.volume-icon {
+    color: #666;
+    font-size: 14px;
+}
+
+.volume-bar {
+    flex: 1;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    position: relative;
+}
+
+.volume-fill {
+    width: 70%;
+    height: 100%;
+    background: #9728feff;
+    border-radius: 2px;
+}
+
+.volume-percentage {
+    color: #666;
+    font-size: 12px;
+}
+
+/* Background Image */
+.background-image-container {
+    width: 900px;
+    height: 450px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    margin-left: 20px;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.background-image:hover {
+    transform: scale(1.05);
+}
